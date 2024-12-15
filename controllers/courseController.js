@@ -26,15 +26,22 @@ exports.updateCourse = async (req, res) => {
       return res.status(404).json({ message: "Professor not found" });
 
     // Calculate the new average for each rating
-    
-    newEntry = professor.ratings.entries + 1; 
-    entry = professor.ratings.entries
+
+    const newEntry = professor.ratings.entries + 1;
+    const entry = professor.ratings.entries;
+    const attendanceNum = parseInt(attendance);
+    const gradingNum = parseInt(grading);
+    const difficultyNum = parseInt(difficulty);
+    const overallNum = parseInt(overall);
+
     professor.ratings.attendance =
-      (professor.ratings.attendance*entry + attendance) / newEntry;
-    professor.ratings.grading = (professor.ratings.grading*entry + grading) / newEntry;
+      parseInt(professor.ratings.attendance * entry + attendanceNum) / newEntry;
+    professor.ratings.grading =
+      parseInt(professor.ratings.grading * entry + gradingNum) / newEntry;
     professor.ratings.difficulty =
-      (professor.ratings.difficulty*entry + difficulty) / newEntry;
-    professor.ratings.overall = (professor.ratings.overall*entry + overall) / newEntry;
+      parseInt(professor.ratings.difficulty * entry + difficultyNum) / newEntry;
+    professor.ratings.overall =
+      parseInt(professor.ratings.overall * entry + overallNum) / newEntry;
     professor.ratings.entries = professor.ratings.entries + 1;
     // Save the updated course
     await course.save();
