@@ -26,13 +26,16 @@ exports.updateCourse = async (req, res) => {
       return res.status(404).json({ message: "Professor not found" });
 
     // Calculate the new average for each rating
+    
+    newEntry = professor.ratings.entries + 1; 
+    entry = professor.ratings.entries
     professor.ratings.attendance =
-      (professor.ratings.attendance + attendance) / 2;
-    professor.ratings.grading = (professor.ratings.grading + grading) / 2;
+      (professor.ratings.attendance*entry + attendance) / newEntry;
+    professor.ratings.grading = (professor.ratings.grading*entry + grading) / newEntry;
     professor.ratings.difficulty =
-      (professor.ratings.difficulty + difficulty) / 2;
-    professor.ratings.overall = (professor.ratings.overall + overall) / 2;
-
+      (professor.ratings.difficulty*entry + difficulty) / newEntry;
+    professor.ratings.overall = (professor.ratings.overall*entry + overall) / newEntry;
+    professor.ratings.entries = professor.ratings.entries + 1;
     // Save the updated course
     await course.save();
     res.status(200).json({ message: "Rating updated successfully", course });
@@ -44,7 +47,6 @@ exports.updateCourse = async (req, res) => {
 // Add a new Course
 exports.addCourse = async (req, res) => {
   const { name, slug } = req.body; // Create a slug by removing spaces and converting to lowercase
-
   try {
     // Check if the course already exists
     const existingCourse = await Course.findOne({ slug });
